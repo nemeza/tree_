@@ -146,7 +146,7 @@
 </head>
 <body>
   <div class="balance">Баланс: <span id="balance">0</span> монет</div>
-  <div class="caption">Shake the tree to earn coins!</div>
+  <div class="caption" id="shakeMessage">Shake the tree to earn coins!</div>
   <div class="tree-container">
     <img src="https://i.pinimg.com/originals/67/cd/1f/67cd1f3ca5a18e9396ccb19280ca9701.gif" alt="Christmas Tree" id="tree">
   </div>
@@ -158,7 +158,7 @@
   <script>
     let tg = window.Telegram.WebApp;
     
-    alert(tg.initDataUnsafe.user.first_name);
+    const shakeMessage = document.getElementById('shakeMessage');
     const balanceElement = document.getElementById('balance');
     const treeImage = document.getElementById('tree');
     let balance = 0;
@@ -169,7 +169,7 @@
       'https://png.pngtree.com/png-vector/20220828/ourmid/pngtree-pixel-art-gift-box-icon-design-vector-png-image_6125099.png',
       'https://static.wikia.nocookie.net/soul-knight/images/4/46/Sprite_Christmas_Gift.png/revision/latest/thumbnail/width/360/height/360?cb=20231206131143',
     ];
-
+    shakeMessage.textContext = tg.initDataUnsafe.user.first_name.concat(" тряси сильнее, подарки уже близко");
     // Function to create a gift
     function createGift() {
       
