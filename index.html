@@ -172,6 +172,9 @@
   <div class="tree-container">
     <img src="https://i.pinimg.com/originals/67/cd/1f/67cd1f3ca5a18e9396ccb19280ca9701.gif" alt="Christmas Tree" id="tree">
   </div>
+   <div id="countdown">
+    Время до Нового года: <span id="timeLeft">00d 00h 00m 00s</span>
+  </div>
   <div class="menu">
     <button>🏆 Рейтинг</button>
     <button>Мой баланс</button>
@@ -246,7 +249,22 @@
         snowflake.remove();
       }, 5000);
     }
+    function updateCountdown() {
+      const now = new Date();
+      const newYear = new Date('January 1, 2025 00:00:00'); // Новый год 2025
+      const timeDiff = newYear - now;
 
+      const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+      const countdownElement = document.getElementById('timeLeft');
+      countdownElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    // Обновляем счетчик каждую секунду
+    setInterval(updateCountdown, 1000);
     // Shake detection
     window.addEventListener('devicemotion', (event) => {
       const acceleration = event.accelerationIncludingGravity;
