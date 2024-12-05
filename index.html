@@ -105,6 +105,7 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
       font-size: 18px;
       color: #333;
+      width: 150px;
     }
 
     /* Иконка подарка перед количеством */
@@ -171,7 +172,7 @@
 <body>
   <div id="shakeMessage">
     <img src="https://via.placeholder.com/24/FFD700/000000?text=🎁" alt="Gift Icon">
-    <span id="balance">0</span> Gifts
+    <span id="balance">0</span> Gifts 🎁
   </div>
 
   <div class="tree-container">
@@ -185,7 +186,7 @@
   <div class="menu">
     <button>🏆 Рейтинг</button>
     <button>Мой баланс</button>
-    <button>Задания</button>
+    <button>Задания 📋</button>
   </div>
 
   <script>
@@ -202,7 +203,7 @@
       'https://png.pngtree.com/png-vector/20220828/ourmid/pngtree-pixel-art-gift-box-icon-design-vector-png-image_6125099.png',
       'https://static.wikia.nocookie.net/soul-knight/images/4/46/Sprite_Christmas_Gift.png/revision/latest/thumbnail/width/360/height/360?cb=20231206131143',
     ];
-    shakeMessage.innerText = `${tg.initDataUnsafe.user.first_name}, тряси сильнее, подарки уже близко`;
+    //shakeMessage.innerText = `${tg.initDataUnsafe.user.first_name}, тряси сильнее, подарки уже близко`;
 
     // Функция для создания подарка
     function createGift() {
