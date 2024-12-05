@@ -84,14 +84,16 @@
 
     .gift {
       position: absolute;
-      top: -100px;
+      top: -50px;
+      width: 30px; /* Smaller size for the gift */
+      height: 30px;
       animation: fall 5s linear, spin 5s linear;
       z-index: 5;
     }
 
     @keyframes fall {
       0% {
-        top: -100px;
+        top: -50px;
       }
       100% {
         top: 100vh;
@@ -147,17 +149,17 @@
     let balance = 0;
     let shaking = false;
     const giftSprites = [
-      'https://cdn-icons-png.flaticon.com/512/465/465260.png',
-      'https://static.wikia.nocookie.net/soul-knight/images/4/46/Sprite_Christmas_Gift.png/revision/latest/thumbnail/width/360/height/360?cb=20231206131143',
-      'https://cdn-icons-png.flaticon.com/512/3693/3693430.png',
-      'https://cdn-icons-png.flaticon.com/512/5506/5506931.png',
+      'https://via.placeholder.com/50/FF0000?text=Gift1',
+      'https://via.placeholder.com/50/00FF00?text=Gift2',
+      'https://via.placeholder.com/50/0000FF?text=Gift3',
+      'https://via.placeholder.com/50/FFFF00?text=Gift4',
     ];
 
     // Function to create a gift
     function createGift() {
       const gift = document.createElement('img');
       gift.classList.add('gift');
-      alert("1");
+      
       // Select random gift sprite
       const randomGift = giftSprites[Math.floor(Math.random() * giftSprites.length)];
       gift.src = randomGift;
@@ -168,7 +170,7 @@
       // Add the gift to the document body
       document.body.appendChild(gift);
 
-      // Remove the gift when it hits the menu
+      // Observe when the gift touches the menu and remove it
       const menu = document.querySelector('.menu');
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
