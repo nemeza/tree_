@@ -82,21 +82,32 @@
       background-color: #f0f0f0;
     }
 
-    .gift {
+   .gift {
       position: absolute;
-      top: -50px;
-      width: 30px; /* Smaller size for the gift */
-      height: 30px;
-      animation: fall 5s linear, spin 5s linear;
-      z-index: 5;
+      width: 50px; /* Размер подарка */
+      height: 50px; /* Размер подарка */
+      background: #FFD700; /* Цвет подарка */
+      border-radius: 10%; /* Округлые углы для подарка */
+      animation: fall 5s linear infinite, moveLeft 10s linear infinite alternate;
     }
 
-    @keyframes fall {
+
+  @keyframes fall {
       0% {
-        top: -50px;
+        top: -50px; /* Начальная позиция чуть выше экрана */
       }
       100% {
-        top: 100vh;
+        top: 100vh; /* Падает до конца экрана */
+      }
+    }
+
+    /* Анимация движения влево-вправ */
+    @keyframes moveLeft {
+      0% {
+        left: 0;
+      }
+      100% {
+        left: 100vw; /* Двигается от левого края до правого */
       }
     }
 
@@ -157,6 +168,7 @@
 
     // Function to create a gift
     function createGift() {
+      
       const gift = document.createElement('img');
       gift.classList.add('gift');
       
