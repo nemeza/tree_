@@ -91,7 +91,27 @@
       border-radius: 10%; /* Округлые углы для подарка */
       animation: fall 5s linear infinite, moveLeft 10s linear infinite alternate;
     }
+    #shakeMessage {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      background-color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      font-size: 18px;
+      color: #333;
+    }
 
+    /* Иконка подарка перед количеством */
+    #shakeMessage img {
+      width: 24px;
+      height: 24px;
+      margin-right: 10px;
+    }
 
   @keyframes fall {
       0% {
@@ -145,8 +165,10 @@
   </style>
 </head>
 <body>
-  <div class="balance">Баланс: <span id="balance">0</span> монет</div>
-  <div class="caption" id="shakeMessage">Shake the tree to earn coins!</div>
+   <div id="shakeMessage">
+    <img src="https://via.placeholder.com/24/FFD700/000000?text=🎁" alt="Gift Icon">
+    <span id="balance">0</span> Gifts
+  </div>
   <div class="tree-container">
     <img src="https://i.pinimg.com/originals/67/cd/1f/67cd1f3ca5a18e9396ccb19280ca9701.gif" alt="Christmas Tree" id="tree">
   </div>
