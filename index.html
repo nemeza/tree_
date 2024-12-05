@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shake the Tree</title>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"></script>
   <style>
     body {
       margin: 0;
@@ -23,6 +21,12 @@
       font-size: 20px;
       font-weight: bold;
       color: #333;
+    }
+
+    .caption {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #555;
     }
 
     .tree-container {
@@ -77,6 +81,7 @@
 </head>
 <body>
   <div class="balance">Баланс: <span id="balance">0</span> монет</div>
+  <div class="caption">Shake the tree to earn coins!</div>
   <div class="tree-container">
     <img src="https://via.placeholder.com/150?text=Tree" alt="Christmas Tree" id="tree">
   </div>
@@ -87,37 +92,11 @@
   </div>
 
   <script>
-    // Firebase Configuration
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      databaseURL: "YOUR_DATABASE_URL",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
-
-    // Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const database = firebase.database(app);
-
     // DOM Elements
     const balanceElement = document.getElementById('balance');
     const treeImage = document.getElementById('tree');
     let balance = 0;
     let shaking = false;
-
-    // Update balance in Firebase
-    const updateBalanceInFirebase = (userId, newBalance) => {
-      firebase.database().ref(`users/${userId}`).set({
-        balance: newBalance
-      }).then(() => {
-        console.log('Balance updated in Firebase');
-      }).catch((error) => {
-        console.error('Error updating balance:', error);
-      });
-    };
 
     // Shake detection
     window.addEventListener('devicemotion', (event) => {
@@ -136,10 +115,6 @@
           // Increment balance
           balance += 10;
           balanceElement.textContent = balance;
-          alert(balance);
-          // Update balance in Firebase
-          const userId = "exampleUserId"; // Replace with dynamic user ID if needed
-          updateBalanceInFirebase(userId, balance);
 
           // Stop shaking animation after 1 second
           setTimeout(() => {
