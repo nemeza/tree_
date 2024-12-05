@@ -61,6 +61,8 @@
       background-color: #fff;
       box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
       padding: 10px 0;
+      position: relative;
+      z-index: 10; /* Ensure the menu stays above the falling gifts */
     }
 
     .menu button {
@@ -80,6 +82,31 @@
       background-color: #f0f0f0;
     }
 
+    .gift {
+      position: absolute;
+      top: 0;
+      animation: fall 5s linear, spin 5s linear;
+      z-index: 5;
+    }
+
+    @keyframes fall {
+      0% {
+        top: -100px;
+      }
+      100% {
+        top: 100vh;
+      }
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
     .snowflake {
       position: absolute;
       top: -50px;
@@ -91,7 +118,7 @@
       animation: fall linear;
     }
 
-    @keyframes fall {
+    @keyframes snowflakeFall {
       0% {
         transform: translateY(0);
         opacity: 1;
@@ -100,10 +127,6 @@
         transform: translateY(100vh);
         opacity: 0;
       }
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
@@ -123,7 +146,7 @@
     const treeImage = document.getElementById('tree');
     let balance = 0;
     let shaking = false;
-  const giftSprites = [
+    const giftSprites = [
       'https://via.placeholder.com/50/FF0000?text=Gift1',
       'https://via.placeholder.com/50/00FF00?text=Gift2',
       'https://via.placeholder.com/50/0000FF?text=Gift3',
@@ -146,28 +169,16 @@
       document.body.appendChild(gift);
 
       // Remove the gift when it hits the menu
-      gift.addEventListener('animationend', () => {
-        gift.remove();
-      });
-    }
-    // Function to create a snowflake
-    function createSnowflake() {
-      const snowflake = document.createElement('div');
-      snowflake.classList.add('snowflake');
-      
-      // Randomize position and animation duration
-      const size = Math.random() * 10 + 5;
-      snowflake.style.left = Math.random() * 100 + 'vw';
-      snowflake.style.width = size + 'px';
-      snowflake.style.height = size + 'px';
-      snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+      const menu = document.querySelector('.menu');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            gift.remove(); // Remove gift when it touches the menu
+          }
+        });
+      }, { threshold: 1 });
 
-      document.body.appendChild(snowflake);
-
-      // Remove snowflake after it falls
-      setTimeout(() => {
-        snowflake.remove();
-      }, 5000);
+      observer.observe(menu);
     }
 
     // Create multiple snowflakes
