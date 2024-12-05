@@ -101,6 +101,10 @@
         opacity: 0;
       }
     }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -119,7 +123,33 @@
     const treeImage = document.getElementById('tree');
     let balance = 0;
     let shaking = false;
+  const giftSprites = [
+      'https://via.placeholder.com/50/FF0000?text=Gift1',
+      'https://via.placeholder.com/50/00FF00?text=Gift2',
+      'https://via.placeholder.com/50/0000FF?text=Gift3',
+      'https://via.placeholder.com/50/FFFF00?text=Gift4',
+    ];
 
+    // Function to create a gift
+    function createGift() {
+      const gift = document.createElement('img');
+      gift.classList.add('gift');
+      
+      // Select random gift sprite
+      const randomGift = giftSprites[Math.floor(Math.random() * giftSprites.length)];
+      gift.src = randomGift;
+
+      // Random horizontal position
+      gift.style.left = Math.random() * 100 + 'vw';
+
+      // Add the gift to the document body
+      document.body.appendChild(gift);
+
+      // Remove the gift when it hits the menu
+      gift.addEventListener('animationend', () => {
+        gift.remove();
+      });
+    }
     // Function to create a snowflake
     function createSnowflake() {
       const snowflake = document.createElement('div');
@@ -167,7 +197,7 @@
 
           // Generate snowflakes
           generateSnowflakes();
-          
+          createGift();
 
           // Stop shaking animation after 1 second
           setTimeout(() => {
