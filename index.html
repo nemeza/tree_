@@ -15,7 +15,7 @@
       height: 100vh;
       background-color: #f5f5f5;
       overflow: hidden;
-      background-image:url("https://t3.ftcdn.net/jpg/04/70/73/64/360_F_470736409_BjMO4XuHintvApcIyuJM7DR65rTfWdXQ.jpg");
+      background-image: url("https://t3.ftcdn.net/jpg/04/70/73/64/360_F_470736409_BjMO4XuHintvApcIyuJM7DR65rTfWdXQ.jpg");
     }
 
     .balance {
@@ -62,7 +62,7 @@
       box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
       padding: 10px 0;
       position: relative;
-      z-index: 10; /* Ensure the menu stays above the falling gifts */
+      z-index: 10;
     }
 
     .menu button {
@@ -84,7 +84,7 @@
 
     .gift {
       position: absolute;
-      top: 0;
+      top: -100px;
       animation: fall 5s linear, spin 5s linear;
       z-index: 5;
     }
@@ -115,7 +115,7 @@
       background-color: white;
       border-radius: 50%;
       opacity: 0.8;
-      animation: fall linear;
+      animation: snowflakeFall 5s linear infinite;
     }
 
     @keyframes snowflakeFall {
@@ -186,6 +186,25 @@
       for (let i = 0; i < 20; i++) {
         setTimeout(createSnowflake, i * 100); // Delay each snowflake
       }
+    }
+
+    // Function to create a snowflake
+    function createSnowflake() {
+      const snowflake = document.createElement('div');
+      snowflake.classList.add('snowflake');
+      
+      // Randomize position and animation duration
+      const size = Math.random() * 10 + 5;
+      snowflake.style.left = Math.random() * 100 + 'vw';
+      snowflake.style.width = size + 'px';
+      snowflake.style.height = size + 'px';
+
+      document.body.appendChild(snowflake);
+
+      // Remove snowflake after it falls
+      setTimeout(() => {
+        snowflake.remove();
+      }, 5000);
     }
 
     // Shake detection
