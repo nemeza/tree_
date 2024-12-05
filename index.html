@@ -114,7 +114,6 @@
     <button>Мой баланс</button>
     <button>Задания</button>
   </div>
-  <audio id="bell-sound" src="https://rr3---sn-3c27sn76.googlevideo.com/videoplayback?expire=1733446620&ei=fPdRZ9_JA9Dh9fwP29604A4&ip=192.140.252.189&id=o-AEt4N5_kgDZXMcqRWUKUVuYuEUg8oobyoTFKHg5a7L_B&itag=139&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&bui=AQn3pFRt-y_VYeUE4wa0d1sksmBAGkmrY99vxpK-F45fFGX1A5p-ONOROl48CeFH6waCRyGSqfgFErvF&vprv=1&mime=audio%2Fmp4&rqh=1&gir=yes&clen=28526&dur=4.504&lmt=1668659173575602&keepalive=yes&fexp=24350590,24350675,24350705,24350737,51326932,51335594&c=ANDROID_VR&txp=5311224&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cxpc%2Cbui%2Cvprv%2Cmime%2Crqh%2Cgir%2Cclen%2Cdur%2Clmt&sig=AJfQdSswRQIhAPyYv7v5PcN-0xK1ndcfqBipnbbxB6J9VHL8RahN7KaZAiBbcn00ir0PfivacCa2X6GmEjAQWvEAp32fIq85Ajc24w%3D%3D&rm=sn-n0hhpujvh-q5jr7l,sn-h55sz7l&rrc=79,104&req_id=1aba2be520d2a3ee&cmsv=e&rms=nxu,au&redirect_counter=2&cms_redirect=yes&ipbypass=yes&met=1733433129,&mh=Xd&mip=188.163.53.92&mm=30&mn=sn-3c27sn76&ms=nxu&mt=1733432668&mv=m&mvi=3&pl=20&lsparams=ipbypass,met,mh,mip,mm,mn,ms,mv,mvi,pl,rms&lsig=AGluJ3MwRgIhAORFLPPGo5ofDUfPkjaxr-OJc7R7ePC7f-l8jH3-KqMbAiEA1_D6ZQUJeckzRB7zvmOg2Wo8BBZm7JThIGVPk9BC8BA%3D"></audio>
   <script>
     const balanceElement = document.getElementById('balance');
     const treeImage = document.getElementById('tree');
@@ -168,8 +167,7 @@
 
           // Generate snowflakes
           generateSnowflakes();
-          bellSound.currentTime = 0; // Reset sound to the beginning
-          bellSound.play();
+          
 
           // Stop shaking animation after 1 second
           setTimeout(() => {
