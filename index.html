@@ -142,47 +142,58 @@
   }
 }
 #leaderboardContent {
-    background-color: rgba(0, 0, 0, 0.6); /* Темный фон для контента */
+    background-color: #000; /* Черный фон для контента */
     border-radius: 10px;
     padding: 20px;
     margin: 20px auto;
-    width: 90%; /* Ширина 90% экрана для мобильных */
-    max-width: 400px; /* Максимальная ширина для маленьких экранов */
+    max-width: 500px;
     color: #fff;
     font-family: 'Arial', sans-serif;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
-.leaderboard-entry {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #ccc;
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.leaderboard-entry:last-child {
-    border-bottom: none;
-}
-
-.leaderboard-rank {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #ffd700; /* Золотой цвет для ранга */
-}
-
-.leaderboard-user {
-    font-size: 1em;
+.leaderboard-header {
+    background-color: #1e2a3a; /* Темный фон для заголовков */
     color: #fff;
-    flex-grow: 1;
-    text-align: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    padding: 10px;
+    font-size: 1.2em;
+    text-align: left;
+    border: 1px solid #444;
+    font-weight: bold;
 }
 
-.leaderboard-balance {
+.leaderboard-row {
+    background-color: #2d3a4b; /* Цвет фона строк */
+    border-bottom: 1px solid #444;
+}
+
+.leaderboard-row:hover {
+    background-color: #3a4b63; /* Цвет фона при наведении */
+}
+
+.leaderboard-cell {
+    padding: 12px;
+    text-align: left;
+    color: #fff;
     font-size: 1em;
-    color: #00ff00; /* Зеленый для баланса */
-    font-weight: bold;
+}
+
+.leaderboard-cell:nth-child(1) {
+    width: 50px; /* Устанавливаем фиксированную ширину для ранга */
+}
+
+.leaderboard-cell:nth-child(2) {
+    width: 200px; /* Устанавливаем фиксированную ширину для имени пользователя */
+}
+
+.leaderboard-cell:nth-child(3) {
+    width: 100px; /* Устанавливаем фиксированную ширину для баланса */
+    text-align: right;
 }
 
 @media (max-width: 600px) {
@@ -190,22 +201,20 @@
         padding: 15px;
     }
 
-    .leaderboard-entry {
-        padding: 8px 0;
+    .leaderboard-header {
+        font-size: 1em;
     }
 
-    .leaderboard-rank {
-        font-size: 1.1em;
-    }
-
-    .leaderboard-user {
+    .leaderboard-cell {
         font-size: 0.9em;
+        padding: 8px;
     }
 
-    .leaderboard-balance {
+    .leaderboard-table {
         font-size: 0.9em;
     }
 }
+
 
 
     @keyframes fall {
@@ -343,13 +352,12 @@ function loadLeaderboard() {
 
     // Получаем ссылку на коллекцию пользователей
     const usersRef = firebase.firestore().collection('users');
-
+    let counter = 0;
     // Запрашиваем первые 10 записей, отсортированных по полю 'balance' (от наибольшего к наименьшему)
     usersRef.orderBy('balance', 'desc').limit(10).get()
         .then(querySnapshot => {
             querySnapshot.forEach((doc, index) => {
-                let counter = 0;
-                counter = counter  + 1;
+                counter +=1;
                 // Получаем данные пользователя
                 const userData = doc.data();
                 const username = userData.username;
