@@ -502,86 +502,43 @@ function loadLeaderboard() {
     // Обновляем счетчик каждую секунду
     setInterval(updateCountdown, 1000);
 
-   function requestDevicePermissions() {
-    // Проверяем, поддерживает ли устройство запрос разрешений для DeviceMotionEvent
-    if (typeof DeviceMotionEvent.requestPermission === 'function') {
-        // Запрашиваем разрешение на доступ к событиям движения устройства
-        DeviceMotionEvent.requestPermission()
-            .then(permissionState => {
-                if (permissionState === 'granted') {
-                    // Если разрешение получено, начинаем отслеживание событий движения устройства
-                    window.addEventListener('devicemotion', handleDeviceMotion);
-                    console.log("DeviceMotionEvent permission granted.");
-                } else {
-                    console.error("DeviceMotionEvent permission denied.");
-                    promptForPermission(); // Если отказано, показываем кнопку для запроса разрешения
-                }
-            })
-            .catch(err => {
-                console.error("Error requesting DeviceMotionEvent permission:", err);
-                promptForPermission(); // В случае ошибки запросим разрешение
-            });
-    } else {
-        // Для старых устройств или Android, где не требуется запрос разрешения
-        window.addEventListener('devicemotion', handleDeviceMotion);
-        console.log("DeviceMotionEvent listener added automatically.");
-    }
-}
+    // Обработка событий тряски
+    var event = document.createEvent('Event');
+    event.initEvent('ondevicemotion', true, true);
 
-function promptForPermission() {
-    // Если разрешение не предоставлено, отображаем кнопку для запроса разрешения
-    const button = document.createElement('button');
-    button.innerText = "Enable Motion Tracking";
-    button.style.position = 'absolute';
-    button.style.top = '50%';
-    button.style.left = '50%';
-    button.style.transform = 'translate(-50%, -50%)';
-    document.body.appendChild(button);
+    event.accelerationIncludingGravity = e.data;
 
-    button.addEventListener('click', () => {
-        requestDevicePermissions();
-        document.body.removeChild(button); // Удаляем кнопку после запроса разрешения
-    });
-}
+    window.dispatchEvent(event);
+    window.addEventListener('devicemotion', (event) => {
 
-function handleDeviceMotion(event) {
-    const acceleration = event.accelerationIncludingGravity;
+      const acceleration = event.accelerationIncludingGravity;
+      const shakeThreshold = 15; // Порог чувствительности
 
-    if (
+      if (
         Math.abs(acceleration.x) > shakeThreshold ||
         Math.abs(acceleration.y) > shakeThreshold ||
         Math.abs(acceleration.z) > shakeThreshold
-    ) {
+      ) {
         if (!shaking) {
-            shaking = true;
-            treeImage.classList.add('shaking');
+          shaking = true;
+          treeImage.classList.add('shaking');
 
-            // Увеличиваем баланс
-            balance += 10;
-            balanceElement.textContent = balance;
+          // Увеличиваем баланс
+          balance += 10;
+          balanceElement.textContent = balance;
+          user.updateUserBalance(userId,10);
+          // Генерация снежинок и подарков
+          generateSnowflakes();
+          createGift();
 
-            // Здесь должен быть ваш код для обновления баланса пользователя, например:
-            // user.updateUserBalance(userId, 10);
-
-            // Генерация снежинок и подарков
-            generateSnowflakes();
-            createGift();
-
-            // Останавливаем анимацию тряски через 1 секунду
-            setTimeout(() => {
-                treeImage.classList.remove('shaking');
-                shaking = false;
-            }, 1000);
+          // Останавливаем анимацию тряски через 1 секунду
+          setTimeout(() => {
+            treeImage.classList.remove('shaking');
+            shaking = false;
+          }, 1000);
         }
-    }
-}
-
-// Вызываем функцию для запроса разрешений и отслеживания изменений положения
-requestDevicePermissions();
-
-// Вызов функции для запроса разрешений и отслеживания событий
-requestDevicePermissions();
-
+      }
+    });
   </script>
 </body>
 </html>
