@@ -506,10 +506,11 @@ function loadLeaderboard() {
     var event = document.createEvent('Event');
     event.initEvent('ondevicemotion', true, true);
 
-    event.accelerationIncludingGravity = e.data;
+
+    window.addEventListener('devicemotion', (event) => {
+        event.accelerationIncludingGravity = e.data;
 
     window.dispatchEvent(event);
-    window.addEventListener('devicemotion', (event) => {
 
       const acceleration = event.accelerationIncludingGravity;
       const shakeThreshold = 15; // Порог чувствительности
