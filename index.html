@@ -141,64 +141,54 @@
   }
 }
 #leaderboardContent {
-  display: none;
-  background-color: #f8f9fa; /* Светлый фон */
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1); /* Легкая тень для создания эффекта приподнятости */
-  max-width: 800px;
-  margin: 30px auto;
-  overflow: hidden;
-  animation: fadeIn 0.5s ease-out;
-}
-
-#leaderboardContent h2 {
-  font-size: 28px;
-  font-weight: bold;
-  text-align: center;
-  color: #333;
-  margin-bottom: 20px;
-  font-family: 'Arial', sans-serif;
-}
-
-#leaderboardContent ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-#leaderboardContent li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #ffffff;
-  padding: 15px;
-  margin: 10px 0;
+  width: 80%;
+  margin: 20px auto;
+  padding: 10px;
+  background-color: #fff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fafafa;
   font-size: 18px;
-  font-family: 'Roboto', sans-serif;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Легкая тень на элементах списка */
-  transition: all 0.3s ease;
 }
 
-#leaderboardContent li:hover {
-  transform: scale(1.05); /* Легкое увеличение при наведении */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Тень при наведении */
-}
-
-#leaderboardContent li span {
+.leaderboard-header {
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  text-align: left;
   font-weight: bold;
-  color: #007bff; /* Цвет для баллов */
+  border-radius: 8px;
 }
 
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+.leaderboard-row {
+  border-bottom: 1px solid #ddd;
 }
+
+.leaderboard-row:hover {
+  background-color: #f1f1f1;
+}
+
+.leaderboard-cell {
+  padding: 12px;
+  text-align: left;
+  color: #333;
+}
+
+.leaderboard-cell:nth-child(1) {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.leaderboard-cell:nth-child(3) {
+  font-weight: bold;
+  color: #28a745;
+}
+
     @keyframes fall {
       0% {
         top: -50px;
@@ -262,7 +252,7 @@
 </div>
   <div class="menu">
     <button  onclick="showLeaderboard()">🏆 Рейтинг</button>
-    <button>Мой баланс</button>
+    <button onclick="showMainScreen()">Мой баланс</button>
     <button>Задания 📋</button>
   </div>
 
@@ -277,29 +267,77 @@
     // Загружаем рейтинг пользователей
     loadLeaderboard();
 }
+function showMainScreen() {
+    const leaderboardContent = document.getElementById('leaderboardContent');
+    const mainScreen = document.getElementById('content'); // Главный экран с елкой и прочим
+
+    // Скрыть блок с рейтингом
+    leaderboardContent.style.display = 'none';
+
+    // Показать главный экран
+    mainScreen.style.display = 'block';
+}
 
 function loadLeaderboard() {
     const leaderboardContent = document.getElementById('leaderboardContent');
+    leaderboardContent.innerHTML = ''; // Очистка предыдущего содержимого
 
-    // Пример динамической подгрузки данных
-    // Получите данные о рейтинге из Firebase или другой базы данных
-    // Это можно заменить на ваш код для получения данных из Firestore
+    // Создаем таблицу
+    const leaderboardTable = document.createElement('table');
+    leaderboardTable.classList.add('leaderboard-table');
 
-    const leaderboardData = [
-        { username: 'User1', points: 100 },
-        { username: 'User2', points: 90 },
-        { username: 'User3', points: 80 },
-    ];
+    // Заголовок таблицы
+    const tableHeader = document.createElement('thead');
 
-    let leaderboardHTML = '<h2>Рейтинг пользователей</h2><ul>';
+    tableHeader.innerHTML = `
+        <tr>
+            <th class="leaderboard-header">Ранг</th>
+            <th class="leaderboard-header">Пользователь</th>
+            <th class="leaderboard-header">Баланс</th>
+        </tr>
+    `;
+    leaderboardTable.appendChild(tableHeader);
 
-    leaderboardData.forEach(user => {
-        leaderboardHTML += `<li>${user.username}: ${user.points} баллов</li>`;
-    });
+    // Тело таблицы
+    const tableBody = document.createElement('tbody');
 
-    leaderboardHTML += '</ul>';
-    leaderboardContent.innerHTML = leaderboardHTML;
+    // Получаем ссылку на коллекцию пользователей
+    const usersRef = firebase.firestore().collection('users');
+
+    // Запрашиваем первые 10 записей, отсортированных по полю 'balance' (от наибольшего к наименьшему)
+    usersRef.orderBy('balance', 'desc').limit(10).get()
+        .then(querySnapshot => {
+            querySnapshot.forEach((doc, index) => {
+                let counter = 0;
+                counter = counter  + 1;
+                // Получаем данные пользователя
+                const userData = doc.data();
+                const userId = doc.id;
+                const userBalance = userData.balance;
+
+                // Создаем строку таблицы для каждого пользователя
+                const userRow = document.createElement('tr');
+                userRow.classList.add('leaderboard-row');
+                userRow.innerHTML = `
+                    <td class="leaderboard-cell">${counter}</td>
+                    <td class="leaderboard-cell">${userId}</td>
+                    <td class="leaderboard-cell">${userBalance} Gifts</td>
+                `;
+
+                // Добавляем строку в тело таблицы
+                tableBody.appendChild(userRow);
+            });
+
+            // Добавляем тело таблицы в таблицу
+            leaderboardTable.appendChild(tableBody);
+            leaderboardContent.appendChild(leaderboardTable);
+        })
+        .catch(error => {
+            console.error('Ошибка при загрузке рейтинга: ', error);
+        });
 }
+
+
     let tg = window.Telegram.WebApp;
     let user = new User();
     let userId = 0;
