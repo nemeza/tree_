@@ -351,7 +351,7 @@ function loadLeaderboard() {
                 counter = counter  + 1;
                 // Получаем данные пользователя
                 const userData = doc.data();
-                const username = doc.username;
+                const username = userData.username;
                 const userBalance = userData.balance;
 
                 // Создаем строку таблицы для каждого пользователя
