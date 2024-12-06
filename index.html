@@ -482,7 +482,7 @@ function loadLeaderboard() {
     // Обработка событий тряски
     window.addEventListener('devicemotion', (event) => {
       const acceleration = event.accelerationIncludingGravity;
-      const shakeThreshold = 5; // Порог чувствительности
+      const shakeThreshold = 15; // Порог чувствительности
 
       if (
         Math.abs(acceleration.x) > shakeThreshold ||
