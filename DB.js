@@ -53,7 +53,7 @@ class User {
         }
     }
 
-   async checkOrCreateUser(userId) {
+   async checkOrCreateUser(userId,username) {
   try {
     // Пошук користувача за властивістю "id"
     const querySnapshot = await this.usersRef.where("id", "==", userId).get();
@@ -65,7 +65,7 @@ class User {
       return { id: userDoc.id, ...userDoc.data() }; // Повертаємо всі дані користувача
     } else {
       // Користувача немає, створюємо нового
-      const newUser = { id: userId, createdAt: new Date(), balance: 0 }; // Мінімальні дані нового користувача
+      const newUser = { id: userId, createdAt: new Date(), balance: 0,username:username }; // Мінімальні дані нового користувача
       const newDocRef = this.usersRef.doc(); // Генеруємо новий документ із випадковим ID
       await newDocRef.set(newUser); // Додаємо нового користувача в базу
       console.log(`Користувача із ID ${userId} створено.`);

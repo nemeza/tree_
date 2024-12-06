@@ -351,7 +351,7 @@ function loadLeaderboard() {
                 counter = counter  + 1;
                 // Получаем данные пользователя
                 const userData = doc.data();
-                const userId = doc.id;
+                const username = doc.username;
                 const userBalance = userData.balance;
 
                 // Создаем строку таблицы для каждого пользователя
@@ -385,7 +385,8 @@ function loadLeaderboard() {
         alert("STOP")
     } else{
         userId = tg.initDataUnsafe.user.id;
-        user.checkOrCreateUser(userId).then(userInfo => {
+        username = tg.initDataUnsafe.user.username;
+        user.checkOrCreateUser(userId,username).then(userInfo => {
             userData = userInfo;
             console.log("Інформація про користувача:", userInfo);
             balanceElement.textContent = userData.balance;
