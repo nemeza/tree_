@@ -200,11 +200,17 @@
   <script>
 
     let tg = window.Telegram.WebApp;
+    let user = new User();
+    let userId = 0;
+    let userData = {};
     if (tg.initDataUnsafe.user === undefined){
         alert("STOP")
     } else{
-        const user = new User();
-        user.checkOrCreateUser(tg.initDataUnsafe.user.id);
+        userId = tg.initDataUnsafe.user.id;
+        user.checkOrCreateUser(userId).then(userInfo => {
+            userData = userInfo;
+  console.log("Інформація про користувача:", userInfo);
+});
     }
     const shakeMessage = document.getElementById('shakeMessage');
     const balanceElement = document.getElementById('balance');
@@ -308,7 +314,7 @@
           // Увеличиваем баланс
           balance += 10;
           balanceElement.textContent = balance;
-
+          user.updateUserBalance()
           // Генерация снежинок и подарков
           generateSnowflakes();
           createGift();
