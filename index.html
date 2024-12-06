@@ -209,7 +209,8 @@
         userId = tg.initDataUnsafe.user.id;
         user.checkOrCreateUser(userId).then(userInfo => {
             userData = userInfo;
-  console.log("Інформація про користувача:", userInfo);
+            console.log("Інформація про користувача:", userInfo);
+            balanceElement.textContent = userData.balance;
 });
     }
     const shakeMessage = document.getElementById('shakeMessage');
