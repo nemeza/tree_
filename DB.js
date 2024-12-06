@@ -51,20 +51,23 @@ class User {
       return false;
     }
   }
-  async checkOrCreateUser(userId, userData) {
+async checkOrCreateUser(userId) {
     try {
-      // Пошук користувача за ID
-      const userDoc = await this.usersRef.doc(userId).get();
+      // Пошук користувача за властивістю "id"
+      const querySnapshot = await this.usersRef.where("id", "==", userId).get();
 
-      if (userDoc.exists) {
+      if (!querySnapshot.empty) {
         // Користувач існує, повертаємо його дані
+        const userDoc = querySnapshot.docs[0]; // Беремо перший документ зі збірки
         console.log(`Користувач із ID ${userId} знайдений.`);
         return { id: userDoc.id, ...userDoc.data() };
       } else {
-        // Користувача немає, створюємо новий
-        await this.usersRef.doc(userId).set(userData);
+        // Користувача немає, створюємо нового
+        const newUser = { id: userId, createdAt: new Date() }; // Мінімальні дані нового користувача
+        const newDocRef = this.usersRef.doc(); // Генеруємо новий документ із випадковим ID
+        await newDocRef.set(newUser); // Додаємо нового користувача в базу
         console.log(`Користувача із ID ${userId} створено.`);
-        return { id: userId, ...userData };
+        return { id: newDocRef.id, ...newUser };
       }
     } catch (error) {
       console.error("Помилка при перевірці або створенні користувача:", error);
@@ -74,7 +77,5 @@ class User {
 }
 
 
-
-user.checkUserExists(121);
 
 
