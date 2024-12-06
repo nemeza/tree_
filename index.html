@@ -308,6 +308,15 @@
   Your browser does not support the audio element.
 </audio>
   <script>
+      // Создаем элемент <audio>
+const audio = new Audio("https://assets.codepen.io/6093409/drums.mp3");
+
+// Автоматически запускаем воспроизведение
+audio.autoplay = true;
+audio.play().catch(error => {
+  console.error("Ошибка воспроизведения:", error);
+});
+
       function deviceMotionPermissionRequest() {
     // feature detect
     if (typeof DeviceMotionEvent.requestPermission === 'function') {
