@@ -1,9 +1,9 @@
-<script src="https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-firestore.js"></script>
+
+
 
 <!-- Add Configuration keys -->
 const firebaseConfig = {
-     apiKey: "AIzaSyBQeqlmWsQ1sw-tc0032QdXV37JpmCv5V4",
+    apiKey: "AIzaSyBQeqlmWsQ1sw-tc0032QdXV37JpmCv5V4",
 
     authDomain: "treeshake-52e39.firebaseapp.com",
 
@@ -30,15 +30,51 @@ class User {
     try {
       const snapshot = await this.usersRef.get(); // Получаем все документы из коллекции
       snapshot.forEach(doc => {
-        alert.log(doc.id); // Выводим ID каждого документа
+        alert(doc.get("d")); // Выводим ID каждого документа
       });
     } catch (error) {
       console.error("Ошибка при получении пользователей:", error);
     }
   }
+  async checkUserExists(userId) {
+  try {
+      const querySnapshot = await this.usersRef.where("id", "==", userId).get(); // Фільтруємо за полем name
+      if (!querySnapshot.empty) {
+        console.log(`Користувач із ім'ям ${name} існує.`);
+        return true;
+      } else {
+        console.log(`Користувача із ім'ям ${name} не знайдено.`);
+        return false;
+      }
+    } catch (error) {
+      console.error("Помилка при перевірці користувача за ім'ям:", error);
+      return false;
+    }
+  }
+  async checkOrCreateUser(userId, userData) {
+    try {
+      // Пошук користувача за ID
+      const userDoc = await this.usersRef.doc(userId).get();
+
+      if (userDoc.exists) {
+        // Користувач існує, повертаємо його дані
+        console.log(`Користувач із ID ${userId} знайдений.`);
+        return { id: userDoc.id, ...userDoc.data() };
+      } else {
+        // Користувача немає, створюємо новий
+        await this.usersRef.doc(userId).set(userData);
+        console.log(`Користувача із ID ${userId} створено.`);
+        return { id: userId, ...userData };
+      }
+    } catch (error) {
+      console.error("Помилка при перевірці або створенні користувача:", error);
+      throw error;
+    }
+  }
 }
 
-const user = new User();
-user.getUsers();
+
+
+user.checkUserExists(121);
 
 
