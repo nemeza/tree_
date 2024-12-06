@@ -140,7 +140,65 @@
     width: 90%; /* Устанавливаем ширину блока, чтобы он не выходил за пределы экрана */
   }
 }
+#leaderboardContent {
+  display: none;
+  background-color: #f8f9fa; /* Светлый фон */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1); /* Легкая тень для создания эффекта приподнятости */
+  max-width: 800px;
+  margin: 30px auto;
+  overflow: hidden;
+  animation: fadeIn 0.5s ease-out;
+}
 
+#leaderboardContent h2 {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+#leaderboardContent ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#leaderboardContent li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  font-size: 18px;
+  font-family: 'Roboto', sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Легкая тень на элементах списка */
+  transition: all 0.3s ease;
+}
+
+#leaderboardContent li:hover {
+  transform: scale(1.05); /* Легкое увеличение при наведении */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Тень при наведении */
+}
+
+#leaderboardContent li span {
+  font-weight: bold;
+  color: #007bff; /* Цвет для баллов */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
     @keyframes fall {
       0% {
         top: -50px;
