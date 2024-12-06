@@ -502,36 +502,119 @@ function loadLeaderboard() {
     // Обновляем счетчик каждую секунду
     setInterval(updateCountdown, 1000);
 
-    // Обработка событий тряски
-    window.addEventListener('devicemotion', (event) => {
-      const acceleration = event.accelerationIncludingGravity;
-      const shakeThreshold = 15; // Порог чувствительности
+    function requestDevicePermissions() {
+    if (typeof DeviceMotionEvent.requestPermission === 'function' && typeof DeviceOrientationEvent.requestPermission === 'function') {
 
-      if (
-        Math.abs(acceleration.x) > shakeThreshold ||
-        Math.abs(acceleration.y) > shakeThreshold ||
-        Math.abs(acceleration.z) > shakeThreshold
-      ) {
-        if (!shaking) {
-          shaking = true;
-          treeImage.classList.add('shaking');
+        const requestMotionPermission = () => {
+            DeviceMotionEvent.requestPermission().then(response => {
+                if (response === 'granted') {
+                    // Обработка событий тряски
+                    window.addEventListener('devicemotion', (event) => {
+                        const acceleration = event.accelerationIncludingGravity;
+                        const shakeThreshold = 15; // Порог чувствительности
 
-          // Увеличиваем баланс
-          balance += 10;
-          balanceElement.textContent = balance;
-          user.updateUserBalance(userId,10);
-          // Генерация снежинок и подарков
-          generateSnowflakes();
-          createGift();
+                        if (
+                            Math.abs(acceleration.x) > shakeThreshold ||
+                            Math.abs(acceleration.y) > shakeThreshold ||
+                            Math.abs(acceleration.z) > shakeThreshold
+                        ) {
+                            if (!shaking) {
+                                shaking = true;
+                                treeImage.classList.add('shaking');
 
-          // Останавливаем анимацию тряски через 1 секунду
-          setTimeout(() => {
-            treeImage.classList.remove('shaking');
-            shaking = false;
-          }, 1000);
-        }
-      }
-    });
+                                // Увеличиваем баланс
+                                balance += 10;
+                                balanceElement.textContent = balance;
+                                user.updateUserBalance(userId, 10);
+                                // Генерация снежинок и подарков
+                                generateSnowflakes();
+                                createGift();
+
+                                // Останавливаем анимацию тряски через 1 секунду
+                                setTimeout(() => {
+                                    treeImage.classList.remove('shaking');
+                                    shaking = false;
+                                }, 1000);
+                            }
+                        }
+                    });
+                    console.log("DeviceMotionEvent permission granted.");
+                } else {
+                    console.error("DeviceMotionEvent permission denied.");
+                }
+            }).catch(err => {
+                console.error("Error requesting DeviceMotionEvent permission:", err);
+            });
+        };
+
+        const requestOrientationPermission = () => {
+            DeviceOrientationEvent.requestPermission().then(permissionState => {
+                if (permissionState === 'granted') {
+                    // Если разрешение получено, добавляем обработчик устройства ориентации
+                    window.addEventListener('deviceorientation', function(event) {
+                        _processGyroscopeData(event.alpha, event.beta, event.gamma, event.absolute);
+                    });
+                } else {
+                    const button = document.createElement('button');
+                    button.innerText = "Enable Orientation";
+                    button.style.position = 'absolute';
+                    button.style.top = '100%';
+                    button.style.left = '100%';
+                    button.style.transform = 'translate(50%, 50%)';
+                    document.body.appendChild(button);
+
+                    button.addEventListener('click', () => {
+                        requestOrientationPermission();
+                        requestMotionPermission();
+                        document.body.removeChild(button); // Убираем кнопку после запроса разрешений
+                    });
+                }
+            }).catch(err => {
+                console.error("Error requesting deviceorientation permission:", err);
+            });
+        };
+
+        // Запрашиваем разрешения
+        requestOrientationPermission();
+        requestMotionPermission();
+
+    } else {
+        // Для устройств без запроса разрешений (например, старые Android)
+        window.addEventListener('devicemotion', (event) => {
+            const acceleration = event.accelerationIncludingGravity;
+            const shakeThreshold = 15; // Порог чувствительности
+
+            if (
+                Math.abs(acceleration.x) > shakeThreshold ||
+                Math.abs(acceleration.y) > shakeThreshold ||
+                Math.abs(acceleration.z) > shakeThreshold
+            ) {
+                if (!shaking) {
+                    shaking = true;
+                    treeImage.classList.add('shaking');
+
+                    // Увеличиваем баланс
+                    balance += 10;
+                    balanceElement.textContent = balance;
+                    user.updateUserBalance(userId, 10);
+                    // Генерация снежинок и подарков
+                    generateSnowflakes();
+                    createGift();
+
+                    // Останавливаем анимацию тряски через 1 секунду
+                    setTimeout(() => {
+                        treeImage.classList.remove('shaking');
+                        shaking = false;
+                    }, 1000);
+                }
+            }
+        });
+    }
+}
+
+// Вызов функции для запроса разрешений и отслеживания событий
+requestDevicePermissions();
+
   </script>
 </body>
 </html>
