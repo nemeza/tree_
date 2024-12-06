@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shake the Tree</title>
+  <script src="https://telegram.org/js/telegram-web-app.js?2"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      height: 100vh;
+      background-color: #f5f5f5;
+      overflow: hidden;
+      background-image: url("https://t3.ftcdn.net/jpg/04/70/73/64/360_F_470736409_BjMO4XuHintvApcIyuJM7DR65rTfWdXQ.jpg");
+    }
+
+    .balance {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .caption {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #555;
+    }
+
+    .tree-container {
+      margin: auto;
+      text-align: center;
+    }
+
+    .tree-container img {
+      width: 220px;
+      height: auto;
+      animation: none;
+    }
+
+    .tree-container img.shaking {
+      animation: shake 0.5s infinite;
+    }
+
+    @keyframes shake {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(-5px, 0); }
+      50% { transform: translate(5px, 0); }
+      75% { transform: translate(-5px, 0); }
+      100% { transform: translate(0, 0); }
+    }
+
+    .menu {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      background-color: #fff;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+      padding: 10px 0;
+      position: relative;
+      z-index: 10;
+    }
+
+    .menu button {
+      flex: 1;
+      font-size: 16px;
+      padding: 10px 0;
+      border: none;
+      background-color: #fff;
+      color: #007bff;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .menu button:hover {
+      background-color: #f0f0f0;
+    }
+
+    .gift {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: #FFD700;
+      border-radius: 10%;
+      animation: fall 5s linear infinite, moveLeft 10s linear infinite alternate;
+    }
+
+    #shakeMessage {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      background-color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      font-size: 18px;
+      color: #333;
+      width: 150px;
+    }
+
+    /* Иконка подарка перед количеством */
+    #shakeMessage img {
+      width: 24px;
+      height: 24px;
+      margin-right: 10px;
+    }
+
+    #countdown {
+      position: absolute;
+      top: calc(50% + 120px);
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #fff;
+      padding: 15px 25px;
+      font-size: 20px;
+      border-radius: 10px;
+      color: #333;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    @keyframes fall {
+      0% {
+        top: -50px;
+      }
+      100% {
+        top: 100vh;
+      }
+    }
+
+    @keyframes moveLeft {
+      0% {
+        left: 0;
+      }
+      100% {
+        left: 100vw;
+      }
+    }
+
+    @keyframes snowflakeFall {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+
+    .snowflake {
+      position: absolute;
+      top: -50px;
+      width: 10px;
+      height: 10px;
+      background-color: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: snowflakeFall 5s linear infinite;
+    }
+  </style>
+</head>
+<body>
+  <div id="shakeMessage">
+    <img src="https://via.placeholder.com/24/FFD700/000000?text=🎁" alt="Gift Icon">
+    <span id="balance">0</span> Gifts 🎁
+  </div>
+
+  <div class="tree-container">
+    <img src="https://i.pinimg.com/originals/67/cd/1f/67cd1f3ca5a18e9396ccb19280ca9701.gif" alt="Christmas Tree" id="tree">
+  </div>
+
+  <div id="countdown">
+    Время до Нового года: <span id="timeLeft">00d 00h 00m 00s</span>
+  </div>
+
+  <div class="menu">
+    <button>🏆 Рейтинг</button>
+    <button>Мой баланс</button>
+    <button>Задания 📋</button>
+  </div>
+
+  <script>
+    let tg = window.Telegram.WebApp;
+    if (tg.initDataUnsafe.user === undefined){
+        alert("STOP")
+    }
+    const shakeMessage = document.getElementById('shakeMessage');
+    const balanceElement = document.getElementById('balance');
+    const treeImage = document.getElementById('tree');
+    let balance = 0;
+    let shaking = false;
+    const giftSprites = [
+      'https://cdn-icons-png.flaticon.com/512/465/465260.png',
+      'https://img.itch.zone/aW1nLzE0NDY2MDgxLnBuZw==/original/QB6DwZ.png',
+      'https://png.pngtree.com/png-vector/20220828/ourmid/pngtree-pixel-art-gift-box-icon-design-vector-png-image_6125099.png',
+      'https://static.wikia.nocookie.net/soul-knight/images/4/46/Sprite_Christmas_Gift.png/revision/latest/thumbnail/width/360/height/360?cb=20231206131143',
+    ];
+    //shakeMessage.innerText = `${tg.initDataUnsafe.user.first_name}, тряси сильнее, подарки уже близко`;
+
+    // Функция для создания подарка
+    function createGift() {
+      const gift = document.createElement('img');
+      gift.classList.add('gift');
+
+      // Выбор случайного изображения подарка
+      const randomGift = giftSprites[Math.floor(Math.random() * giftSprites.length)];
+      gift.src = randomGift;
+
+      // Рандомизация начальной горизонтальной позиции
+      gift.style.left = Math.random() * 100 + 'vw';
+
+      // Добавляем подарок на страницу
+      document.body.appendChild(gift);
+
+      // Удаление подарка, когда он касается меню
+      const menu = document.querySelector('.menu');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            gift.remove(); // Удалить подарок при столкновении с меню
+          }
+        });
+      }, { threshold: 1 });
+
+      observer.observe(menu);
+    }
+
+    // Функция для генерации снежинок
+    function generateSnowflakes() {
+      for (let i = 0; i < 20; i++) {
+        setTimeout(createSnowflake, i * 100); // Задержка для каждой снежинки
+      }
+    }
+
+    // Функция для создания снежинки
+    function createSnowflake() {
+      const snowflake = document.createElement('div');
+      snowflake.classList.add('snowflake');
+
+      // Рандомизация размеров и анимации снежинок
+      const size = Math.random() * 10 + 5;
+      snowflake.style.left = Math.random() * 100 + 'vw';
+      snowflake.style.width = size + 'px';
+      snowflake.style.height = size + 'px';
+
+      document.body.appendChild(snowflake);
+
+      // Удаление снежинки после того, как она упала
+      setTimeout(() => {
+        snowflake.remove();
+      }, 5000);
+    }
+
+    // Функция для обновления обратного отсчета до Нового года
+    function updateCountdown() {
+      const now = new Date();
+      const newYear = new Date('January 1, 2025 00:00:00'); // Новый год 2025
+      const timeDiff = newYear - now;
+
+      const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+      const countdownElement = document.getElementById('timeLeft');
+      countdownElement.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    // Обновляем счетчик каждую секунду
+    setInterval(updateCountdown, 1000);
+
+    // Обработка событий тряски
+    window.addEventListener('devicemotion', (event) => {
+      const acceleration = event.accelerationIncludingGravity;
+      const shakeThreshold = 15; // Порог чувствительности
+
+      if (
+        Math.abs(acceleration.x) > shakeThreshold ||
+        Math.abs(acceleration.y) > shakeThreshold ||
+        Math.abs(acceleration.z) > shakeThreshold
+      ) {
+        if (!shaking) {
+          shaking = true;
+          treeImage.classList.add('shaking');
+
+          // Увеличиваем баланс
+          balance += 10;
+          balanceElement.textContent = balance;
+
+          // Генерация снежинок и подарков
+          generateSnowflakes();
+          createGift();
+
+          // Останавливаем анимацию тряски через 1 секунду
+          setTimeout(() => {
+            treeImage.classList.remove('shaking');
+            shaking = false;
+          }, 1000);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
