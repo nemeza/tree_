@@ -120,17 +120,26 @@
 
 
     #countdown {
-      position: absolute;
-      top: calc(50% + 120px);
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #fff;
-      padding: 15px 25px;
-      font-size: 20px;
-      border-radius: 10px;
-      color: #333;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
+  position: absolute;
+  top: calc(50% + 120px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  padding: 15px 25px;
+  font-size: 20px;
+  border-radius: 10px;
+  color: #333;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  white-space: nowrap; /* Запрещает перенос строки */
+}
+
+@media (max-width: 768px) {
+  #countdown {
+    font-size: 16px; /* Уменьшаем размер шрифта на мобильных устройствах */
+    padding: 10px 20px; /* Уменьшаем отступы для мобильных устройств */
+    width: 90%; /* Устанавливаем ширину блока, чтобы он не выходил за пределы экрана */
+  }
+}
 
     @keyframes fall {
       0% {
