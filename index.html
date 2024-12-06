@@ -101,27 +101,23 @@
     }
 
     #shakeMessage {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      background-color: white;
-      padding: 10px 20px;
-      border-radius: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      font-size: 18px;
-      color: #333;
-      width: 150px;
-    }
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Центрирует текст по горизонтали */
+  background-color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  font-size: 18px;
+  color: #333;
+  width: 150px;
+}
 
-    /* Иконка подарка перед количеством */
-    #shakeMessage img {
-      width: 24px;
-      height: 24px;
-      margin-right: 10px;
-    }
+
 
     #countdown {
       position: absolute;
@@ -179,7 +175,6 @@
 </head>
 <body>
   <div id="shakeMessage">
-    <img src="https://via.placeholder.com/24/FFD700/000000?text=🎁" alt="Gift Icon">
     <span id="balance">0</span> Gifts 🎁
   </div>
 
