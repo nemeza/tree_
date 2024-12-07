@@ -55,6 +55,18 @@
     .tree-container img.shaking {
       animation: shake 0.5s infinite;
     }
+.gift {
+  position: absolute;
+  top: -100px; /* Начальная позиция подарка за экраном */
+  width: 50px; /* Примерная ширина подарка */
+  height: 50px; /* Примерная высота подарка */
+  transition: top 3s linear; /* Плавная анимация падения */
+}
+
+@keyframes fall {
+  0% { top: -100px; }  /* Начальная позиция */
+  100% { top: 100vh; }  /* Падает до низа экрана */
+}
 
     @keyframes shake {
       0% { transform: translate(0, 0); }
@@ -92,14 +104,7 @@
       background-color: #f0f0f0;
     }
 
-    .gift {
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      background: #FFD700;
-      border-radius: 10%;
-      animation: fall 5s linear infinite, moveLeft 10s linear infinite alternate;
-    }
+
 
     #shakeMessage {
   position: fixed;
@@ -446,7 +451,7 @@ function loadLeaderboard() {
 
       // Рандомизация начальной горизонтальной позиции
       gift.style.left = Math.random() * 50 + 'vw';
-
+        gift.style.animation = 'fall 3s linear';
       // Добавляем подарок на страницу
       document.body.appendChild(gift);
 
