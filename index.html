@@ -309,13 +309,7 @@
 </audio>
   <script>
       // Создаем элемент <audio>
-const audio = new Audio("https://assets.codepen.io/6093409/drums.mp3");
 
-// Автоматически запускаем воспроизведение
-audio.autoplay = true;
-audio.play().catch(error => {
-  console.error("Ошибка воспроизведения:", error);
-});
 
       function deviceMotionPermissionRequest() {
     // feature detect
@@ -451,7 +445,7 @@ function loadLeaderboard() {
       gift.src = randomGift;
 
       // Рандомизация начальной горизонтальной позиции
-      gift.style.left = Math.random() * 100 + 'vw';
+      gift.style.left = Math.random() * 50 + 'vw';
 
       // Добавляем подарок на страницу
       document.body.appendChild(gift);
