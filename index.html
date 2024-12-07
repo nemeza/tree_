@@ -57,16 +57,17 @@
     }
 .gift {
   position: absolute;
-  top: -100px; /* Начальная позиция подарка за экраном */
+  top: 0; /* Начальная позиция сверху */
   width: 50px; /* Примерная ширина подарка */
   height: 50px; /* Примерная высота подарка */
-  transition: top 3s linear; /* Плавная анимация падения */
+  animation: fall 3s linear; /* Плавная анимация падения */
 }
 
 @keyframes fall {
-  0% { top: -100px; }  /* Начальная позиция */
+  0% { top: 0; }  /* Начальная позиция */
   100% { top: 100vh; }  /* Падает до низа экрана */
 }
+
 
     @keyframes shake {
       0% { transform: translate(0, 0); }
@@ -442,31 +443,43 @@ function loadLeaderboard() {
 
     // Функция для создания подарка
     function createGift() {
-      const gift = document.createElement('img');
-      gift.classList.add('gift');
+  const gift = document.createElement('img');
+  gift.classList.add('gift');
 
-      // Выбор случайного изображения подарка
-      const randomGift = giftSprites[Math.floor(Math.random() * giftSprites.length)];
-      gift.src = randomGift;
+  // Выбор случайного изображения подарка
+  const randomGift = giftSprites[Math.floor(Math.random() * giftSprites.length)];
+  gift.src = randomGift;
 
-      // Рандомизация начальной горизонтальной позиции
-      gift.style.left = 0 + 'vw';
-        gift.style.animation = 'fall 3s linear';
-      // Добавляем подарок на страницу
-      document.body.appendChild(gift);
+  // Позиционируем подарок вверху по центру экрана
+  gift.style.position = 'absolute';
+  gift.style.top = '0'; // Начальная позиция в верхней части экрана
+  gift.style.left = '50%'; // Позиция по центру экрана
+  gift.style.transform = 'translateX(-50%)'; // Центрируем по горизонтали
 
-      // Удаление подарка, когда он касается меню
-      const menu = document.querySelector('.menu');
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            gift.remove(); // Удалить подарок при столкновении с меню
-          }
-        });
-      }, { threshold: 1 });
+  // Рандомизация размера подарка
+  const randomSize = Math.random() * 50 + 50; // Размер от 50px до 100px
+  gift.style.width = randomSize + 'px';
+  gift.style.height = randomSize + 'px';
 
-      observer.observe(menu);
-    }
+  // Анимация падения
+  gift.style.animation = 'fall 3s linear';
+
+  // Добавляем подарок на страницу
+  document.body.appendChild(gift);
+
+  // Удаление подарка, когда он касается меню
+  const menu = document.querySelector('.menu');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        gift.remove(); // Удалить подарок при столкновении с меню
+      }
+    });
+  }, { threshold: 1 });
+
+  observer.observe(menu);
+}
+
 
     // Функция для генерации снежинок
     function generateSnowflakes() {
